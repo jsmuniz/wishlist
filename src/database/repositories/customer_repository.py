@@ -4,6 +4,9 @@ from database.models import Customer
 def get(page, per_page):
     return Customer.query.paginate(page, per_page)
 
+def get_by_id(customer_id):
+    return Customer.query.filter(Customer.id == customer_id).one()
+
 def create(data):
     name = data.get('name')
     email = data.get('email')

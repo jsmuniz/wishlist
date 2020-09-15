@@ -9,6 +9,8 @@ pagination = api.model('A page of results', {
 })
 
 
+#Customer Serializers
+
 customer = api.model('Customer', {
     'id': fields.Integer(readOnly=True, description='The unique identifier of a customer'),
     'name': fields.String(required=True, description='Customer name'),
@@ -30,5 +32,20 @@ customer_response = api.model('Customer Response', {
     'status_code': fields.Integer(description='Request Status Code'),
     'message': fields.String(description='Request Message'), 
     'data': fields.Nested(customer, description='Customer'),
+    'details': fields.String(description='Request Details')
+})
+
+#Wishlist Serializers
+
+wishlist = api.model('Wishlist', {
+    'id': fields.Integer(readOnly=True, description='The unique identifier of a wishlist'),
+    'customer_id': fields.Integer(attribute='customer.id'),
+    'customer': fields.String(attribute='customer.name'),
+})
+
+wishlist_response = api.model('Wishlist Response', {
+    'status_code': fields.Integer(description='Request Status Code'),
+    'message': fields.String(description='Request Message'), 
+    'data': fields.Nested(wishlist, description='Wishlist'),
     'details': fields.String(description='Request Details')
 })
