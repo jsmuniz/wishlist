@@ -4,6 +4,8 @@ import traceback
 import conf
 from flask_restplus import Api
 from sqlalchemy.orm.exc import NoResultFound
+from api.response import Response, ResponseMessages
+from tools.http_status_code import HttpStatusCode
 
 log = logging.getLogger(__name__)
 
@@ -13,14 +15,10 @@ api = Api(version='1.0', title='WishList API',
 
 @api.errorhandler
 def default_error_handler(e):
-    message = 'An unhandled exception occurred.'
-    log.exception(message)
+    response = Response(
+        HttpStatusCode.INTERNAL_SERVER_ERROR.value,
+        ResponseMessages.EXCEPTION.value,
+        None,
+        None)
 
-    if not settings.FLASK_DEBUG:
-        return {'message': message}, 500
-
-
-@api.errorhandler(NoResultFound)
-def database_not_found_error_handler(e):
-    log.warning(traceback.format_exc())
-    return {'message': 'A database result was required but none was found.'}, 404
+    return {message: 'DEU RUIM'}, response.status_code

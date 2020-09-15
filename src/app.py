@@ -5,7 +5,7 @@ import conf
 from flask import Flask, Blueprint
 from api.restplus import api
 from database import db
-from api.controllers.customers import ns as customers_namespace
+from api.controllers.customer_controller import ns as customers_namespace
 
 app = Flask(__name__)
 app.config.from_object(conf)
@@ -24,7 +24,7 @@ def initialize_app(flask_app):
 def main():
     initialize_app(app)
     log.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
-    app.run(debug=conf.FLASK_DEBUG)
+    app.run()
 
 if __name__ == "__main__":
     main()

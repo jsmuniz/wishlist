@@ -1,8 +1,8 @@
 from database import db
 from database.models import Customer
 
-def get():
-    return Customer.query.all()
+def get(page, per_page):
+    return Customer.query.paginate(page, per_page)
 
 def create(data):
     name = data.get('name')
@@ -16,3 +16,11 @@ def create(data):
 
     db.session.add(customer)
     db.session.commit()
+    db.session.refresh(customer)
+
+    return customer
+
+def exists_user_with_email(email):
+    return db.session.query(Customer.query.filter(Customer.email == email).exists()).scalar()
+
+
