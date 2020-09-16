@@ -4,7 +4,7 @@ from flask_restplus import Resource
 from api.serializers import customer, customer_list_response, customer_response, wishlist_response
 from api.parsers import pagination_arguments
 from api.restplus import api
-from services.customer_service import get_all, create_customer
+from services.customer_service import *
 from services.wishlist_service import get_wishlist_by_customer_id
 
 log = logging.getLogger(__name__)
@@ -38,8 +38,17 @@ class CustomerCollection(Resource):
         return response, response.status_code
 
 
+@ns.route('/<int:id>')
+class CustomerItem(Resource):
+
+    @api.marshal_with(customer_response)
+    def get(self, id):
+        response = get_customer_by_id(id)
+        return response, response.status_code
+
+
 @ns.route('/<int:id>/wishlists/')
-class PostsArchiveCollection(Resource):
+class CustomerWishlists(Resource):
 
     @api.marshal_with(wishlist_response)
     def get(self, id):

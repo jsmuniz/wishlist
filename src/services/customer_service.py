@@ -1,16 +1,26 @@
-from database.repositories.customer_repository import get, create, exists_customer_with_email
+from database.repositories.customer_repository import *
 from tools.email_validator import is_valid
 from api.response import Response
 from api.response import ResponseMessages
 from tools.http_status_code import HttpStatusCode
 from database.models import Customer
 
+
 def get_all(page, per_page):
     return Response(
-        HttpStatusCode.OK.value, 
-        ResponseMessages.SUCCESS.value, 
-        get(page, per_page), 
+        HttpStatusCode.OK.value,
+        ResponseMessages.SUCCESS.value,
+        get(page, per_page),
         None)
+
+
+def get_customer_by_id(customer_id):
+    return Response(
+        HttpStatusCode.OK.value,
+        ResponseMessages.SUCCESS.value,
+        get_by_id(customer_id),
+        None)
+
 
 def create_customer(data):
     name = data.get('name')
@@ -29,6 +39,7 @@ def create_customer(data):
         create(customer),
         None)
 
+
 def __validate_fields(name, email):
     error_message = None
 
@@ -37,7 +48,7 @@ def __validate_fields(name, email):
 
     elif not is_valid(email):
         error_message = "Invalid customer e-mail"
-    
+
     elif exists_customer_with_email(email):
         error_message = "A customer with this e-mail is already registered"
 
@@ -49,4 +60,3 @@ def __validate_fields(name, email):
             error_message))
     else:
         return (True, None)
-    
