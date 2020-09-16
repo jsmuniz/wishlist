@@ -1,10 +1,11 @@
 import logging
 from flask import request
 from flask_restplus import Resource
-from api.serializers import customer, customer_list_response, customer_response
+from api.serializers import customer, customer_list_response, customer_response, wishlist_response
 from api.parsers import pagination_arguments
 from api.restplus import api
-import services.customer_service as customer_service
+from services.customer_service import get_all, create_customer
+from services.wishlist_service import get_wishlist_by_customer_id
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ class CustomerCollection(Resource):
         page = args.get('page', 1)
         per_page = args.get('per_page', 2)
 
-        response = customer_service.get_all(page, per_page)
+        response = get_all(page, per_page)
 
         print(response.data)
 
@@ -32,7 +33,16 @@ class CustomerCollection(Resource):
     @api.marshal_with(customer_response)
     def post(self):
         data = request.json
-        response = customer_service.create_customer(data)
+        response = create_customer(data)
         return response, response.status_code
+
+@ns.route('/<int:id>/wishlists/')
+class PostsArchiveCollection(Resource):
+
+    @api.marshal_with(wishlist_response)
+    def get(self, id):
+        response = get_wishlist_by_customer_id(id)
+        return response, response.status_code
+        
 
 

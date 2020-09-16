@@ -1,4 +1,4 @@
-from database.repositories.wishlist_repository import create, exists_wishlist_for_customer, get_by_id, exists_wishlist
+from database.repositories.wishlist_repository import *
 from database.repositories.customer_repository import get_by_id as get_customer_by_id
 from database.repositories.wishlist_item_repository import create as create_item, exists_wishlist_product
 from database.models import Wishlist, WishlistItem
@@ -21,6 +21,13 @@ def create_wishlist(data):
         HttpStatusCode.CREATED.value,
         ResponseMessages.SUCCESS.value,
         create(wishlist),
+        None)
+
+def get_wishlist_by_customer_id(customer_id):
+    return Response(
+        HttpStatusCode.OK.value,
+        ResponseMessages.SUCCESS.value,
+        get_wishlist_by_customer(customer_id),
         None)
 
 def add_wishlist_item(wishlist_id, data):
