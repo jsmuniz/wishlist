@@ -1,7 +1,7 @@
 import infrastructure.products_api_http_client as http_client
 from database.repositories.wishlist_repository import *
+from database.repositories.wishlist_item_repository import create as create_item, exists_wishlist_product, get_paginated_wishlist_items, get_wishlist_item, delete_item
 from database.repositories.customer_repository import get_by_id as get_customer_by_id
-from database.repositories.wishlist_item_repository import create as create_item, exists_wishlist_product, get_paginated_wishlist_items
 from database.models import Wishlist, WishlistItem
 from api.response import Response
 from api.response import ResponseMessages
@@ -130,6 +130,34 @@ def delete_wishlist(wishlist_id):
             'Wishlist not found')
 
     delete(wishlist)
+
+    return Response(
+        HttpStatusCode.OK.value,
+        ResponseMessages.SUCCESS.value,
+        None,
+        None)
+
+
+def delete_wishlist_item(wishlist_id, product_id):
+    wishlist = get_by_id(wishlist_id)
+
+    if wishlist is None:
+        return Response(
+            HttpStatusCode.BAD_REQUEST.value,
+            ResponseMessages.ERROR.value,
+            None,
+            'Wishlist not found')
+
+    wishlist_item = get_wishlist_item(wishlist_id, product_id)
+
+    if wishlist_item is None:
+        return Response(
+            HttpStatusCode.BAD_REQUEST.value,
+            ResponseMessages.ERROR.value,
+            None,
+            'Product not found in wishlist')
+
+    delete_item(wishlist_item)
 
     return Response(
         HttpStatusCode.OK.value,

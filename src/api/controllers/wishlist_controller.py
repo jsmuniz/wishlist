@@ -24,7 +24,7 @@ class WishlistPost(Resource):
 
 
 @ns.route('/<int:id>')
-class WishlistItem(Resource):
+class WishlistOperations(Resource):
     @api.response(201, 'Wishlist item successfully created')
     @api.expect(wishlist_item)
     @api.marshal_with(wishlist_item_response)
@@ -49,4 +49,13 @@ class WishlistItem(Resource):
     @api.marshal_with(response)
     def delete(self, id):
         response = delete_wishlist(id)
+        return response, response.status_code
+
+
+@ns.route('/<int:id>/product/<string:product_id>')
+class WishListItemOperations(Resource):
+    @api.response(200, 'Wishlist item succesfully deleted')
+    @api.marshal_with(response)
+    def delete(self, id, product_id):
+        response = delete_wishlist_item(id, product_id)
         return response, response.status_code

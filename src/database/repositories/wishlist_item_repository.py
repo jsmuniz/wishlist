@@ -18,3 +18,12 @@ def exists_wishlist_product(wishlist_id, product_id):
 
 def get_paginated_wishlist_items(wishlist_id, page, per_page):
     return WishlistItem.query.filter(WishlistItem.wishlist_id == wishlist_id).paginate(page, per_page)
+
+
+def get_wishlist_item(wishlist_id, product_id):
+    return WishlistItem.query.filter(WishlistItem.wishlist_id == wishlist_id, WishlistItem.product_id == product_id).one_or_none()
+
+
+def delete_item(wishlist_item):
+    db.session.delete(wishlist_item)
+    db.session.commit()
