@@ -28,7 +28,7 @@ class WishlistItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.String(50), unique=True, nullable=False)
 
-    wishlist_id = db.Column(db.Integer, db.ForeignKey('wishlists.id'), unique=True, nullable=False)
+    wishlist_id = db.Column(db.Integer, db.ForeignKey('wishlists.id'), unique=False, nullable=False)
     wishlist = db.relationship('Wishlist', backref=db.backref('wishlist_itens', lazy='dynamic'))
 
     def __init__(self, product_id, wishlist):

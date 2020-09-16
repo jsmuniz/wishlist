@@ -49,3 +49,17 @@ wishlist_response = api.model('Wishlist Response', {
     'data': fields.Nested(wishlist, description='Wishlist'),
     'details': fields.String(description='Request Details')
 })
+
+wishlist_item = api.model('Wishlist Item', {
+    'id': fields.Integer(readOnly=True, description='The unique identifier of a wishlist item'),
+    'product_id': fields.String(description='Product Id'),
+    'wishlist_id': fields.Integer(attribute='wishlist.id'),
+    'customer': fields.String(attribute='wishlist.customer.name'),
+})
+
+wishlist_item_response = api.model('Wishlist Item Response', {
+    'status_code': fields.Integer(description='Request Status Code'),
+    'message': fields.String(description='Request Message'), 
+    'data': fields.Nested(wishlist_item, description='Wishlist Item'),
+    'details': fields.String(description='Request Details')
+})
