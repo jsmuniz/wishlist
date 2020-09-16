@@ -21,7 +21,7 @@ class CustomerCollection(Resource):
         args = pagination_arguments.parse_args(request)
 
         page = args.get('page', 1)
-        per_page = args.get('per_page', 2)
+        per_page = args.get('per_page', 10)
 
         response = get_all(page, per_page)
 

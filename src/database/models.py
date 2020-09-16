@@ -19,7 +19,7 @@ class Wishlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     customer_id = db.Column(db.Integer, db.ForeignKey(
-        'customers.id'), unique=True, nullable=False)
+        'customers.id', ondelete="cascade"), unique=True)
     customer = db.relationship(
         'Customer', backref=db.backref('wishlists', lazy='dynamic'))
 
@@ -34,7 +34,7 @@ class WishlistItem(db.Model):
     product_id = db.Column(db.String(50), unique=True, nullable=False)
 
     wishlist_id = db.Column(db.Integer, db.ForeignKey(
-        'wishlists.id'), unique=False, nullable=False)
+        'wishlists.id', ondelete="cascade"), unique=False)
     wishlist = db.relationship('Wishlist', backref=db.backref(
         'wishlist_itens', lazy='dynamic'))
 

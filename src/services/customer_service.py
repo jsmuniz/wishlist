@@ -84,9 +84,6 @@ def __validate_delete_customer_request(customer):
     if customer is None:
         error_message = 'Customer not found'
 
-    elif exists_wishlist_for_customer(customer.id):
-        error_message = 'Customer has wishlists. Remove the wishlist first'
-
     if error_message is not None:
         return (False, Response(
             HttpStatusCode.BAD_REQUEST.value,

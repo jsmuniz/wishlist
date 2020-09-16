@@ -23,7 +23,7 @@ customer = api.model('Customer', {
     'email': fields.String(required=True, description='Customer e-mail'),
 })
 
-page_of_customers = api.inherit('Page of blog posts', pagination, {
+page_of_customers = api.inherit('Page of customers', pagination, {
     'items': fields.List(fields.Nested(customer))
 })
 
@@ -54,6 +54,23 @@ wishlist_item = api.model('Wishlist Item', {
     'customer': fields.String(attribute='wishlist.customer.name'),
 })
 
+
 wishlist_item_response = api.inherit('Wishlist Item Response', response, {
     'data': fields.Nested(wishlist_item, description='Wishlist Item'),
+})
+
+product = api.model('Product', {
+    'id': fields.String(description='The unique identifier of a product'),
+    'title': fields.String(description='Product title'),
+    'price': fields.Float(description='Product price'),
+    'image': fields.String(description='Product image link'),
+    'review_score': fields.Float(description='Product review score')
+})
+
+page_of_wishlist_items = api.inherit('Page of wishlist items', pagination, {
+    'items': fields.List(fields.Nested(product))
+})
+
+wishlist_items_list_response = api.inherit('Customer List Response', response, {
+    'data': fields.Nested(page_of_wishlist_items, description="A page of wishlist items"),
 })
