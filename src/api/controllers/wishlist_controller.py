@@ -3,7 +3,7 @@ from flask import request
 from flask_restplus import Resource
 from api.serializers import wishlist, wishlist_response, wishlist_item, wishlist_item_response, wishlist_items_list_response, response
 from api.parsers import pagination_arguments
-from api.restplus import api
+from api.restplus import api, token_required
 from services.wishlist_service import *
 
 log = logging.getLogger(__name__)
@@ -14,6 +14,8 @@ ns = api.namespace(
 
 @ns.route('/')
 class WishlistPost(Resource):
+    @api.doc(security='apikey')
+    @token_required
     @api.response(201, 'Wishlist successfuly created')
     @api.expect(wishlist)
     @api.marshal_with(wishlist_response)
@@ -25,6 +27,8 @@ class WishlistPost(Resource):
 
 @ns.route('/<int:id>')
 class WishlistOperations(Resource):
+    @api.doc(security='apikey')
+    @token_required
     @api.response(201, 'Wishlist item successfully created')
     @api.expect(wishlist_item)
     @api.marshal_with(wishlist_item_response)
@@ -33,6 +37,8 @@ class WishlistOperations(Resource):
         response = add_wishlist_item(id, data)
         return response, response.status_code
 
+    @api.doc(security='apikey')
+    @token_required
     @api.expect(pagination_arguments)
     @api.response(200, 'Wishlist items successfully fetched')
     @api.marshal_with(wishlist_items_list_response)
@@ -45,6 +51,8 @@ class WishlistOperations(Resource):
         response = get_wishlist_items(id, page, per_page)
         return response, response.status_code
 
+    @api.doc(security='apikey')
+    @token_required
     @api.response(200, 'Wishlist succesfully deleted')
     @api.marshal_with(response)
     def delete(self, id):
@@ -54,6 +62,8 @@ class WishlistOperations(Resource):
 
 @ns.route('/<int:id>/product/<string:product_id>')
 class WishListItemOperations(Resource):
+    @api.doc(security='apikey')
+    @token_required
     @api.response(200, 'Wishlist item succesfully deleted')
     @api.marshal_with(response)
     def delete(self, id, product_id):

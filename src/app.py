@@ -10,9 +10,11 @@ from api.controllers.wishlist_controller import ns as wishlists_namespace
 
 app = Flask(__name__)
 app.config.from_object(conf)
-logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
+logging_conf_path = os.path.normpath(os.path.join(
+    os.path.dirname(__file__), '../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
+
 
 def initialize_app(flask_app):
     blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -23,10 +25,13 @@ def initialize_app(flask_app):
 
     db.init_app(flask_app)
 
+
 def main():
     initialize_app(app)
-    log.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
+    log.info(
+        '>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
     app.run(debug=True)
+
 
 if __name__ == "__main__":
     main()
