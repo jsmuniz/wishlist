@@ -13,32 +13,40 @@ def get_all(page, per_page):
         None)
 
 def create_customer(data):
-    if is_valid(data['email']):
-        if not exists_customer_with_email(data['email']):
-            name = data.get('name')
-            email = data.get('email')
+    name = data.get('name')
+    email = data.get('email')
 
-            customer = Customer(name, email)
+    validation_result = __validate_fields(name, email)
 
-            return Response(
-                HttpStatusCode.CREATED.value,
-                ResponseMessages.SUCCESS.value,
-                create(customer),
-                None)
-        else:
-            return Response(
-            HttpStatusCode.BAD_REQUEST.value,
-            ResponseMessages.ERROR.value,
-            None,
-            "A customer with this e-mail is already registered"
-        )
-    else:
-        return Response(
-            HttpStatusCode.BAD_REQUEST.value,
-            ResponseMessages.ERROR.value,
-            None,
-            "Invalid customer e-mail"
-        )
+    if not validation_result[0]:
+        return validation_result[1]
+
+    customer = Customer(name, email)
+
+    return Response(
+        HttpStatusCode.CREATED.value,
+        ResponseMessages.SUCCESS.value,
+        create(customer),
+        None)
+
+def __validate_fields(name, email):
+    error_message = None
+
+    if not name:
+        error_message = "Invalid Customer Name"
+
+    elif not is_valid(email):
+        error_message = "Invalid customer e-mail"
     
+    elif exists_customer_with_email(email):
+        error_message = "A customer with this e-mail is already registered"
 
+    if error_message is not None:
+        return (False, Response(
+            HttpStatusCode.BAD_REQUEST.value,
+            ResponseMessages.ERROR.value,
+            None,
+            error_message))
+    else:
+        return (True, None)
     
