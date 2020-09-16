@@ -5,7 +5,7 @@ def get(page, per_page):
     return Customer.query.paginate(page, per_page)
 
 def get_by_id(customer_id):
-    return Customer.query.filter(Customer.id == customer_id).one()
+    return Customer.query.filter(Customer.id == customer_id).one_or_none()
 
 def create(customer):
     db.session.add(customer)

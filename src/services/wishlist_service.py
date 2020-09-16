@@ -1,4 +1,4 @@
-from database.repositories.wishlist_repository import create
+from database.repositories.wishlist_repository import create, exists_wishlist_for_customer
 from database.repositories.customer_repository import get_by_id
 from database.models import Wishlist
 from api.response import Response
@@ -9,12 +9,10 @@ def create_wishlist(data):
     customer_id = data.get('customer_id')
     customer = get_by_id(customer_id)
 
-    if(customer is None):
-        return Response(
-        HttpStatusCode.BAD_REQUEST.value,
-        ResponseMessages.ERROR.value,
-        None,
-        None)
+    validationResult = __validate_customer(customer)
+
+    if not validationResult[0]:
+        return validationResult[1]
 
     wishlist = Wishlist(customer)
     
@@ -24,5 +22,21 @@ def create_wishlist(data):
         create(wishlist),
         None)
 
+def __validate_customer(customer):
+    error_message = None
+
+    if customer is None:
+        error_message = 'Invalid Customer Id'
+    elif exists_wishlist_for_customer(customer.id):
+        error_message = 'Customer already has a wishlist'
+
+    if error_message is not None:
+        return (False, Response(
+        HttpStatusCode.BAD_REQUEST.value,
+        ResponseMessages.ERROR.value,
+        None,
+        error_message))
+    
+    return (True, None)
 
     

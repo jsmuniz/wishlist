@@ -8,5 +8,8 @@ def create(wishlist):
 
     return wishlist
 
+def exists_wishlist_for_customer(customer_id):
+    return db.session.query(Wishlist.query.filter(Wishlist.customer_id == customer_id).exists()).scalar()
+
 
 
