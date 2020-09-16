@@ -60,3 +60,20 @@ def __validate_fields(name, email):
             error_message))
     else:
         return (True, None)
+
+
+def delete_customer(customer_id):
+    customer = get_by_id(customer_id)
+
+    if customer is None:
+        return Response(
+            HttpStatusCode.BAD_REQUEST.value,
+            ResponseMessages.ERROR.value,
+            None,
+            'Customer not found')
+
+    return Response(
+        HttpStatusCode.OK.value,
+        ResponseMessages.SUCCESS.value,
+        delete(customer),
+        None)

@@ -1,7 +1,7 @@
 import logging
 from flask import request
 from flask_restplus import Resource
-from api.serializers import customer, customer_list_response, customer_response, wishlist_response
+from api.serializers import customer, customer_list_response, customer_response, wishlist_response, response
 from api.parsers import pagination_arguments
 from api.restplus import api
 from services.customer_service import *
@@ -44,6 +44,12 @@ class CustomerItem(Resource):
     @api.marshal_with(customer_response)
     def get(self, id):
         response = get_customer_by_id(id)
+        return response, response.status_code
+
+    @api.response(200, 'Category successfully deleted.')
+    @api.marshal_with(response)
+    def delete(self, id):
+        response = delete_customer(id)
         return response, response.status_code
 
 

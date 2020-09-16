@@ -8,8 +8,14 @@ pagination = api.model('A page of results', {
     'total': fields.Integer(description='Total number of results'),
 })
 
+response = api.model('Response', {
+    'status_code': fields.Integer(description='Request Status Code'),
+    'message': fields.String(description='Request Message'),
+    'details': fields.String(description='Request Details')
+})
 
-#Customer Serializers
+
+# Customer Serializers
 
 customer = api.model('Customer', {
     'id': fields.Integer(readOnly=True, description='The unique identifier of a customer'),
@@ -21,21 +27,15 @@ page_of_customers = api.inherit('Page of blog posts', pagination, {
     'items': fields.List(fields.Nested(customer))
 })
 
-customer_list_response = api.model('Customer List Response', {
-    'status_code': fields.Integer(description='Request Status Code'),
-    'message': fields.String(description='Request Message'), 
+customer_list_response = api.inherit('Customer List Response', response, {
     'data': fields.Nested(page_of_customers, description="A page of customers"),
-    'details': fields.String(description='Request Details')
 })
 
-customer_response = api.model('Customer Response', {
-    'status_code': fields.Integer(description='Request Status Code'),
-    'message': fields.String(description='Request Message'), 
-    'data': fields.Nested(customer, description='Customer'),
-    'details': fields.String(description='Request Details')
+customer_response = api.inherit('Customer Response', response, {
+    'data': fields.Nested(customer, description='Customer')
 })
 
-#Wishlist Serializers
+# Wishlist Serializers
 
 wishlist = api.model('Wishlist', {
     'id': fields.Integer(readOnly=True, description='The unique identifier of a wishlist'),
@@ -43,11 +43,8 @@ wishlist = api.model('Wishlist', {
     'customer': fields.String(attribute='customer.name'),
 })
 
-wishlist_response = api.model('Wishlist Response', {
-    'status_code': fields.Integer(description='Request Status Code'),
-    'message': fields.String(description='Request Message'), 
+wishlist_response = api.inherit('Wishlist Response', response, {
     'data': fields.Nested(wishlist, description='Wishlist'),
-    'details': fields.String(description='Request Details')
 })
 
 wishlist_item = api.model('Wishlist Item', {
@@ -57,9 +54,6 @@ wishlist_item = api.model('Wishlist Item', {
     'customer': fields.String(attribute='wishlist.customer.name'),
 })
 
-wishlist_item_response = api.model('Wishlist Item Response', {
-    'status_code': fields.Integer(description='Request Status Code'),
-    'message': fields.String(description='Request Message'), 
+wishlist_item_response = api.inherit('Wishlist Item Response', response, {
     'data': fields.Nested(wishlist_item, description='Wishlist Item'),
-    'details': fields.String(description='Request Details')
 })
