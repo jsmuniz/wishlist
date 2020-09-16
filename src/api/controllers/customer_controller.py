@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 
 ns = api.namespace('customers', description='Operations related to customers')
 
+
 @ns.route('/')
 class CustomerCollection(Resource):
 
@@ -36,6 +37,7 @@ class CustomerCollection(Resource):
         response = create_customer(data)
         return response, response.status_code
 
+
 @ns.route('/<int:id>/wishlists/')
 class PostsArchiveCollection(Resource):
 
@@ -43,6 +45,3 @@ class PostsArchiveCollection(Resource):
     def get(self, id):
         response = get_wishlist_by_customer_id(id)
         return response, response.status_code
-        
-
-

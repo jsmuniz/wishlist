@@ -1,3 +1,4 @@
+import infrastructure.products_api_http_client as http_client
 from database.repositories.wishlist_repository import *
 from database.repositories.customer_repository import get_by_id as get_customer_by_id
 from database.repositories.wishlist_item_repository import create as create_item, exists_wishlist_product
@@ -5,6 +6,8 @@ from database.models import Wishlist, WishlistItem
 from api.response import Response
 from api.response import ResponseMessages
 from tools.http_status_code import HttpStatusCode
+from tools.uuid_validator import is_valid_uuid
+
 
 def create_wishlist(data):
     customer_id = data.get('customer_id')
@@ -16,12 +19,13 @@ def create_wishlist(data):
         return validationResult[1]
 
     wishlist = Wishlist(customer)
-    
+
     return Response(
         HttpStatusCode.CREATED.value,
         ResponseMessages.SUCCESS.value,
         create(wishlist),
         None)
+
 
 def get_wishlist_by_customer_id(customer_id):
     return Response(
@@ -29,6 +33,7 @@ def get_wishlist_by_customer_id(customer_id):
         ResponseMessages.SUCCESS.value,
         get_wishlist_by_customer(customer_id),
         None)
+
 
 def add_wishlist_item(wishlist_id, data):
     wishlist = get_by_id(wishlist_id)
@@ -47,6 +52,7 @@ def add_wishlist_item(wishlist_id, data):
         create_item(wishlist_item),
         None)
 
+
 def __validate_wishlist_request(customer):
     error_message = None
 
@@ -63,28 +69,25 @@ def __validate_wishlist_item_request(wishlist, product_id):
 
     if wishlist is None:
         error_message = 'Wishlist not found'
-    
-    elif not product_id:
+
+    elif not is_valid_uuid(product_id):
         error_message = 'Invalid Product Id'
-    
+
     elif exists_wishlist_product(wishlist.id, product_id):
         error_message = 'Product already exists in the wishlist'
 
+    elif not http_client.exists_product(product_id):
+        error_message = 'Product not found'
+
     return __build_validation_response(error_message)
+
 
 def __build_validation_response(error_message):
     if error_message is not None:
         return (False, Response(
-        HttpStatusCode.BAD_REQUEST.value,
-        ResponseMessages.ERROR.value,
-        None,
-        error_message))
+            HttpStatusCode.BAD_REQUEST.value,
+            ResponseMessages.ERROR.value,
+            None,
+            error_message))
     else:
         return (True, None)
-
-
-
-    
-    
-
-    
