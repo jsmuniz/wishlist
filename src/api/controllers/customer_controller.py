@@ -46,10 +46,18 @@ class CustomerItem(Resource):
         response = get_customer_by_id(id)
         return response, response.status_code
 
-    @api.response(200, 'Category successfully deleted.')
+    @api.response(200, 'Customer successfully deleted')
     @api.marshal_with(response)
     def delete(self, id):
         response = delete_customer(id)
+        return response, response.status_code
+
+    @api.response(200, 'Customer successfully updated')
+    @api.expect(customer)
+    @api.marshal_with(response)
+    def put(self, id):
+        data = request.json
+        response = update_customer(id, data)
         return response, response.status_code
 
 

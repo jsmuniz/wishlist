@@ -25,3 +25,12 @@ def exists_customer_with_email(email):
 def delete(customer):
     db.session.delete(customer)
     db.session.commit()
+
+
+def update(customer):
+    db.session.add(customer)
+    db.session.commit()
+
+
+def get_customer_by_email(email):
+    return Customer.query.filter(Customer.email == email).one_or_none()
